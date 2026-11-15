@@ -33,6 +33,11 @@ export function update(fn) {
   return memory;
 }
 
+/** Bills worth showing: hides empty drafts left by a failed read or an unfilled manual entry. */
+export function visibleBills() {
+  return load().bills.filter((b) => Number(b.bill?.amount) > 0 || String(b.bill?.payee || '').trim());
+}
+
 export function getBill(id) {
   return load().bills.find((b) => b.id === id) || null;
 }

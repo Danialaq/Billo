@@ -18,9 +18,9 @@ function go(hash) {
 
 function updateNav(name) {
   document.querySelectorAll('.nav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === name));
-  const s = store.state();
-  s.bills.forEach((r) => refreshSteps(r));
-  const count = todayQueue(s.bills, todayISO()).length;
+  const bills = store.visibleBills();
+  bills.forEach((r) => refreshSteps(r));
+  const count = todayQueue(bills, todayISO()).length;
   const dot = document.getElementById('today-count');
   dot.textContent = String(count);
   dot.classList.toggle('hide', !count);

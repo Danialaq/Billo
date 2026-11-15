@@ -47,7 +47,7 @@ function weekHtml(week, selected) {
 export function mountToday(root) {
   let selected = todayISO();
   function render() {
-    const s = store.state();
+    const s = { ...store.state(), bills: store.visibleBills() };
     const today = todayISO();
     s.bills.forEach((r) => refreshSteps(r, today));
     const queue = todayQueue(s.bills, today);
