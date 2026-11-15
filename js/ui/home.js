@@ -33,8 +33,8 @@ function drawerHtml() {
     <div class="dbill" aria-hidden="true">
       <span class="scanline"></span>
       <div class="org">${esc(f.payee)}</div><div class="sub">Notice of parking violation</div>
-      <div class="row"><span>Expired meter · 412 Main St</span><span>$65.00</span></div>
-      <div class="row"><span>Penalty if unpaid after due date</span><span class="hlx">+$65.00<i class="box" style="--d:2"><em>LATE FEE ✓</em></i></span></div>
+      <div class="drow"><span>Expired meter · 412 Main St</span><span>$65.00</span></div>
+      <div class="drow"><span>Penalty if unpaid after due date</span><span class="hlx">+$65.00<i class="box" style="--d:2"><em>LATE FEE ✓</em></i></span></div>
       <div class="total"><span>Amount due</span><b class="hlx">$65.00<i class="box" style="--d:0"><em>AMOUNT ✓</em></i></b></div>
       <div class="due"><span class="hlx">Due by ${esc(formatDate(f.dueDate))}<i class="box" style="--d:1"><em>3 DAYS LATE</em></i></span></div>
     </div>
@@ -165,7 +165,7 @@ export function mountHome(root) {
   function play() {
     timers.splice(0).forEach(clearTimeout);
     drawer.className = 'drawer';
-    if (reduce) { drawer.classList.add('s-done'); label.textContent = '1 bill · 1 tiny step'; return; }
+    if (reduce) { drawer.classList.add('s-stack', 's-open', 's-bill', 's-scan', 's-done'); label.textContent = '5 unopened bills → 1 tiny step'; return; }
     drawer.classList.add('s-stack');
     label.textContent = 'Picking the one that matters…';
     later(() => drawer.classList.add('s-open'), 750);
