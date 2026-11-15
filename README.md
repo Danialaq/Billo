@@ -25,6 +25,31 @@ Built in 24 hours for **Business Cup 2.0** (Zimran × AIESEC, Nazarbayev Univers
 
 No account, no database, no bank links. Bills and progress live in `localStorage`. The photo goes to one tiny serverless function (`api/read.js`) that calls Gemini; the API key stays in a server environment variable and never reaches the page.
 
+## Business model and the path to $100M ARR
+
+**What we sell.** Billo Plus: $9.99/month or $59.99/year (7-day trial). Free plan: 3 bill scans a month. The funnel is web-to-app: short-video ad → "How much is your ADHD tax?" quiz → first free bill scan → money-leak map → paywall. The user gets value before being asked to pay.
+
+**Proof people pay in this space.** YNAB ~$47M revenue (2025) with ~450k payers at $109/yr; Monarch Money 500k+ paying subscribers, $850M valuation (2025); Inflow (ADHD program, $96/yr) raised $16.7M; Shimmer ADHD coaching sells at $140–345/month. Nobody combines ADHD-first design with money: budget apps need discipline, ADHD apps skip money.
+
+| Market | Size | Basis |
+|---|---|---|
+| TAM | 15.5M | U.S. adults with a current ADHD diagnosis (CDC) |
+| SAM | ~7–8M | aged 25–45 with money trouble (assumption) |
+| SOM, 5 years | 250–400k payers | 3–5% of SAM (assumption) → **$20–32M ARR** at ~$80/yr |
+
+**Ladder to $100M ARR** (expanding outward from the niche, not away from it):
+
+1. Own "ADHD money" in the U.S. — brand, ADHD creators, coaches and clinics as partners. $20–32M.
+2. Couples and households — one partner with ADHD, shared bills, higher ARPU (~$120–130).
+3. UK, Canada, Australia — same language, same ads.
+4. Everyone budgets don't work for — no diagnosis needed.
+
+**~800k payers × ~$125 average revenue ≈ $100M ARR.** For scale, that is less than 2× YNAB's paying base.
+
+**Unit economics (targets for the first 60 days, not results yet).** LTV ≥ $80, CAC < $30 → LTV/CAC ≥ 2.7. Quiz → trial 8–12%, trial → paid 35%+. Cost to serve is low: no database, no bank links, one serverless function; AI cost per scan is a small fraction of a ~$5/month ARPU.
+
+**Risks we are watching.** Retention in an audience that drops apps (we measure D7/D30 first), accuracy on real bill photos, and copycats — answered with brand, partnerships with the ADHD community, and data on what actually gets ADHD bills paid.
+
 ## Run locally
 
 ```bash
