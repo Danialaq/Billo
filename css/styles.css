@@ -356,3 +356,35 @@ section.block { padding: 48px 0; }
   .drips, .leak-btn { animation: none !important; }
 }
 body.still *, body.still *::before, body.still *::after { transition: none !important; animation: none !important; }
+
+/* ---------- money week */
+.week { margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 20px; }
+.week-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.week-head h2 { font-size: 20px; }
+.week-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(52px, 1fr); gap: 6px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+.wday { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 8px 4px 9px; display: grid; justify-items: center; gap: 2px; cursor: pointer; font: inherit; color: var(--ink); transition: border-color .15s, background .15s, transform .1s; }
+.wday:hover { border-color: #cfc6ba; transform: translateY(-1px); }
+.wday .wd { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.wday b { font: 800 20px/1.1 var(--display); }
+.wday.today b { color: var(--brand); }
+.wday.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.wday.on .wd { color: rgba(255,255,255,.7); } .wday.on.today b { color: #ffd36b; }
+.dots { display: flex; gap: 3px; height: 8px; align-items: center; }
+.dots i, .week-legend i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.dot-due { background: var(--red); } .dot-pay { background: var(--brand); } .dot-task { background: var(--amber); } .dot-done { background: var(--mint); }
+.wday.on .dot-pay { background: #b3a4ff; }
+.week-day { margin-top: 12px; display: grid; gap: 8px; }
+.wday-title { font-weight: 800; font-size: 15px; }
+.witem { display: grid; grid-template-columns: 82px 1fr auto; gap: 12px; align-items: center; text-decoration: none; color: inherit; background: var(--bg); border-radius: 14px; padding: 10px 12px; border: 1px solid transparent; }
+.witem:hover { border-color: var(--line); }
+.witem b { display: block; font-size: 15px; } .witem small { color: var(--muted); }
+.witem .amt { font-weight: 800; }
+.wtag { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; border-radius: 999px; text-align: center; }
+.k-due .wtag { background: var(--red-soft); color: var(--red); }
+.k-pay .wtag { background: var(--brand-soft); color: var(--brand-ink); }
+.k-task .wtag { background: var(--amber-soft); color: var(--amber); }
+.k-done .wtag { background: var(--mint-soft); color: var(--mint); }
+.k-done b { text-decoration: line-through; opacity: .6; }
+.week-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+.week-legend span { display: inline-flex; gap: 6px; align-items: center; }
+@media (max-width: 560px) { .witem { grid-template-columns: 1fr auto; } .wtag { grid-column: 1 / -1; justify-self: start; } }

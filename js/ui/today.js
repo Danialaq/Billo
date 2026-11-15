@@ -2,8 +2,10 @@
 
 import { todayQueue, streak, normalizeBill, urgency } from '../engine/steps.js';
 import { usd } from '../engine/money.js';
-import { formatDate, todayISO, addDays } from '../engine/dates.js';
-import { esc, toast } from './dom.js';
+import { formatDate, todayISO, parseISO } from '../engine/dates.js';
+import { moneyWeek, calendarEvents } from '../engine/week.js';
+import { buildIcs } from '../engine/ics.js';
+import { esc, toast, download } from './dom.js';
 import { completeStep, refreshSteps, typeEmoji } from './bill-view.js';
 import { celebrate } from './fx.js';
 import * as store from '../store.js';
@@ -13,7 +15,37 @@ function greeting() {
   return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
 }
 
+const KIND_LABEL = { due: 'Due', pay: 'Pay day', task: 'Tiny step', done: 'Done' };
+
+function weekHtml(week, selected) {
+  const day = week.find((d) => d.date === selected) || week[0];
+  return `
+  <section class="week" aria-label="Your money for the next 14 days">
+    <div class="week-head">
+      <h2>Your money, next 14 days</h2>
+      <button class="btn btn-ghost btn-sm" data-ics-all>📅 Add all to my calendar</button>
+    </div>
+    <div class="week-strip" role="tablist">${week.map((d, i) => {
+      const date = parseISO(d.date);
+      const kinds = [...new Set(d.items.map((x) => x.kind))];
+      return `<button class="wday ${d.date === day.date ? 'on' : ''} ${i === 0 ? 'today' : ''}" role="tab" aria-selected="${d.date === day.date}" data-day="${d.date}">
+        <span class="wd">${i === 0 ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })}</span>
+        <b>${date.getUTCDate()}</b>
+        <span class="dots">${kinds.map((k) => `<i class="dot-${k}"></i>`).join('')}</span>
+      </button>`;
+    }).join('')}</div>
+    <div class="week-day">
+      <div class="wday-title">${esc(day === week[0] ? 'Today' : formatDate(day.date))}</div>
+      ${day.items.length ? day.items.map((x) => `<a class="witem k-${x.kind}" href="#/bill/${esc(x.recordId)}">
+        <span class="wtag">${KIND_LABEL[x.kind]}</span><span class="wtext"><b>${esc(x.title)}</b><small>${esc(x.payee)}</small></span><span class="amt">${usd(x.amount)}</span></a>`).join('')
+        : '<p class="muted" style="margin:6px 0 0">Nothing on this day. Enjoy it.</p>'}
+    </div>
+    <div class="week-legend"><span><i class="dot-due"></i>Due</span><span><i class="dot-pay"></i>Pay day</span><span><i class="dot-task"></i>Tiny step</span><span><i class="dot-done"></i>Done</span></div>
+  </section>`;
+}
+
 export function mountToday(root) {
+  let selected = todayISO();
   function render() {
     const s = store.state();
     const today = todayISO();
@@ -22,10 +54,6 @@ export function mountToday(root) {
     const first = queue[0];
     const days = streak(s.doneDates, today);
     const open = s.bills.filter((r) => !r.completedAt);
-    const upcoming = s.bills
-      .flatMap((r) => r.steps.filter((st) => !st.done && st.when && st.when > today && st.when <= addDays(today, 14)).map((st) => ({ r, st })))
-      .sort((a, b) => a.st.when.localeCompare(b.st.when));
-
     if (!s.bills.length) {
       root.innerHTML = `<div class="page"><div class="wrap narrow"><div class="panel empty">
         <div class="big">🌱</div><h2 style="font-size:28px">Nothing here yet</h2>
@@ -54,13 +82,12 @@ export function mountToday(root) {
         <div class="metric"><b>${open.length}</b><span>open bill${open.length === 1 ? '' : 's'}</span></div>
       </div>
 
+      ${weekHtml(moneyWeek(s.bills, today), selected)}
+
       ${queue.length > 1 ? `<h2 style="font-size:20px;margin:22px 0 10px">Also today</h2><div class="list">${queue.slice(1).map((q) => `
         <div class="row"><button class="check" data-done="${esc(q.record.id)}|${esc(q.step.id)}" aria-label="Mark done">✓</button>
           <a href="#/bill/${esc(q.record.id)}" style="text-decoration:none;color:inherit"><b>${esc(q.step.title)}</b><small>${esc(q.record.bill.payee)} · ${esc(q.urgency.label)}</small></a>
           <span class="chip">${q.step.minutes} min</span></div>`).join('')}</div>` : ''}
-
-      ${upcoming.length ? `<h2 style="font-size:20px;margin:22px 0 10px">Coming up</h2><div class="list">${upcoming.map(({ r, st }) => `
-        <a class="row" href="#/bill/${esc(r.id)}"><span class="em">📅</span><span><b>${esc(st.title)}</b><small>${esc(r.bill.payee)} · ${esc(formatDate(st.when))}</small></span><span class="amt">${usd(r.bill.amount)}</span></a>`).join('')}</div>` : ''}
 
       <h2 style="font-size:20px;margin:22px 0 10px">All bills</h2>
       <div class="list">${s.bills.map((r) => {
@@ -74,6 +101,15 @@ export function mountToday(root) {
   }
 
   root.onclick = (e) => {
+    const dayBtn = e.target.closest('[data-day]');
+    if (dayBtn) { selected = dayBtn.dataset.day; render(); return; }
+    if (e.target.closest('[data-ics-all]')) {
+      const events = calendarEvents(store.state().bills);
+      if (!events.length) { toast('No upcoming pay days yet'); return; }
+      download('billo-money-calendar.ics', buildIcs(events, 'billo-all'), 'text/calendar');
+      toast(`${events.length} reminders ready — open the file to add them`);
+      return;
+    }
     const t = e.target.closest('button[data-done]');
     if (!t) return;
     const [recordId, stepId] = t.dataset.done.split('|');

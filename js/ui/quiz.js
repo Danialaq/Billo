@@ -3,6 +3,7 @@
 import { QUESTIONS, leakMap, ASSUMPTIONS, BILLO_PRICE_YEAR } from '../engine/leaks.js';
 import { usd } from '../engine/money.js';
 import { esc, toast } from './dom.js';
+import { shareTaxCard } from './share.js';
 import * as store from '../store.js';
 
 export function mountQuiz(root, { go }) {
@@ -61,9 +62,20 @@ export function mountLeaks(root) {
     <div class="panel mt-16 center">
       <h2 style="font-size:24px">${map.payback >= 1 ? `Billo Plus pays for itself ${map.payback}× over` : 'Keep your streak going with Billo Plus'}</h2>
       <p class="muted">${usd(BILLO_PRICE_YEAR)} a year vs. ${usd(map.total, { cents: false })} in leaks.</p>
-      <a class="btn btn-primary btn-lg mt-8" href="#/plus">Plug my leaks</a>
+      <div class="cta-row mt-8" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href="#/plus">Plug my leaks</a>
+        <button class="btn btn-ghost btn-lg" data-share>📣 Share my ADHD tax</button>
+      </div>
+      <p class="fine mt-16">Makes a 1080×1350 card for Instagram, TikTok or a group chat.</p>
     </div>
   </div></div>`;
+  root.onclick = async (e) => {
+    const b = e.target.closest('[data-share]');
+    if (!b) return;
+    b.disabled = true;
+    try { await shareTaxCard(map); } catch { toast('Could not make the card — try again'); }
+    b.disabled = false;
+  };
 }
 
 export function mountPlus(root, { go }) {

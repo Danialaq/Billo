@@ -81,3 +81,27 @@ test('leak map adds up the stated assumptions', () => {
   assert.equal(m.rows[0].id, 'impulse');
   assert.ok(m.payback > 20);
 });
+
+import { moneyWeek, calendarEvents } from '../js/engine/week.js';
+
+test('money week places due dates, pay days and overdue steps on the right days', () => {
+  const mk = (id, dueDate, type = 'phone') => {
+    const plan = buildSteps({ payee: id, type, amount: 50, dueDate }, TODAY);
+    return { id, bill: plan.bill, steps: plan.steps };
+  };
+  const records = [mk('Phone', '2026-11-24'), mk('Late ticket', '2026-11-12', 'fine')];
+  const week = moneyWeek(records, TODAY, 14);
+  assert.equal(week.length, 14);
+  assert.equal(week[0].date, TODAY);
+  const kindsOn = (date) => week.find((d) => d.date === date).items.map((x) => x.kind);
+  assert.ok(kindsOn('2026-11-22').includes('pay'));   // pay day 2 days before due
+  assert.ok(kindsOn('2026-11-24').includes('due'));
+  assert.ok(week[0].items.some((x) => x.payee === 'Late ticket')); // overdue step shows today
+});
+
+test('calendar export lists future pay days and due dates once', () => {
+  const plan = buildSteps({ payee: 'Phone', type: 'phone', amount: 85.4, dueDate: '2026-11-24' }, TODAY);
+  const events = calendarEvents([{ id: 'p', bill: plan.bill, steps: plan.steps }], TODAY);
+  assert.deepEqual(events.map((e) => e.date), ['2026-11-22', '2026-11-24']);
+  assert.match(events[0].label, /Pay Phone/);
+});
