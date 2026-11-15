@@ -1,6 +1,6 @@
 // App shell: hash router.
 
-import { renderHome } from './ui/home.js';
+import { mountHome } from './ui/home.js';
 import { mountScan, mountBillPage } from './ui/scan.js';
 import { mountToday } from './ui/today.js';
 import { mountQuiz, mountLeaks, mountPlus } from './ui/quiz.js';
@@ -38,7 +38,7 @@ function route() {
   else if (page === 'quiz') { mountQuiz(root, { go }); nav = 'quiz'; }
   else if (page === 'leaks') { mountLeaks(root); nav = 'quiz'; }
   else if (page === 'plus') { mountPlus(root, { go }); nav = 'plus'; }
-  else { root.innerHTML = renderHome(); nav = 'home'; }
+  else { mountHome(root); nav = 'home'; }
   updateNav(nav);
   window.scrollTo(0, 0);
 }

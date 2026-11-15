@@ -231,3 +231,67 @@ section.block { padding: 48px 0; }
   .metric b { font-size: 22px; }
   .panel { padding: 18px; }
 }
+
+/* ---------- live ADHD-tax counter */
+.ticker { background: var(--ink); color: #fff; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 6px 12px; padding: 11px 20px; font-size: 15px; font-weight: 600; text-align: center; }
+.ticker-num { font: 800 21px/1 var(--display); letter-spacing: -.01em; color: #ffd36b; font-variant-numeric: tabular-nums; min-width: 92px; }
+.ticker-src { color: rgba(255,255,255,.55); font-size: 12.5px; font-weight: 500; text-decoration: none; }
+.ticker-src:hover { color: #fff; text-decoration: underline; }
+
+/* ---------- envelope drawer → one step */
+.drawer { position: relative; height: 520px; width: 100%; max-width: 520px; margin-left: auto; }
+.env { position: absolute; left: 0; top: 0; width: 250px; height: 150px; padding: 0; border: 1px solid #e3d6bf; border-radius: 8px; background: #f6eedf; cursor: pointer; text-align: left; font: inherit; color: var(--ink);
+  box-shadow: 0 10px 24px rgba(40,25,10,.12); transform: translate(var(--x), var(--y)) rotate(var(--r));
+  transition: transform .7s cubic-bezier(.2,.8,.2,1) calc(var(--i) * 40ms), opacity .4s ease, box-shadow .2s; overflow: hidden; }
+.env:hover { box-shadow: 0 16px 34px rgba(40,25,10,.2); }
+.env .flap { position: absolute; inset: 0 0 auto 0; height: 86px; background: #ebdfc8; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .5s ease; }
+.env .to { position: absolute; left: 20px; bottom: 16px; font-size: 13px; line-height: 1.35; }
+.env .to b { display: block; font-size: 15px; }
+.env .stamp { position: absolute; right: 14px; bottom: 16px; font: 800 10.5px/1 var(--font); letter-spacing: .08em; padding: 4px 6px; border: 2px solid var(--red); color: var(--red); border-radius: 3px; transform: rotate(-6deg); }
+.env.hot { z-index: 3; }
+
+/* 1. stack: every envelope slides to the middle, the hot one ends on top */
+.s-stack .env { transform: translate(135px, 120px) rotate(calc(var(--r) * .35)); }
+.s-stack .env.hot { transform: translate(135px, 112px) rotate(-1deg); }
+/* 2. open: the others fade, the flap of the top one opens */
+.s-open .env:not(.hot) { opacity: 0; pointer-events: none; }
+.s-open .env.hot .flap { transform: scaleY(-1); }
+/* 3. bill rises out of the envelope, envelope drops away */
+.dbill { position: absolute; left: 50%; top: 150px; width: 340px; padding: 20px 22px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 24px 50px rgba(30,20,10,.18);
+  transform: translateX(-50%) translateY(40px) scale(.92); opacity: 0; transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .3s, top .6s cubic-bezier(.2,.8,.2,1); z-index: 4; overflow: hidden; font-size: 14px; }
+.s-bill .dbill { opacity: 1; top: 18px; transform: translateX(-50%) rotate(-1.2deg); }
+.s-bill .env.hot { opacity: 0; transform: translate(135px, 220px) rotate(0deg); pointer-events: none; }
+.dbill .org { font-weight: 800; font-size: 18px; } .dbill .sub { color: #8a8580; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; margin: 3px 0 10px; }
+.dbill .row { display: flex; justify-content: space-between; padding: 13px 0 8px; border-bottom: 1px dashed #e4ddd3; color: #4a4560; }
+.dbill .total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; }
+.dbill .total span { color: #6c6884; font-size: 13px; } .dbill .total b { font-size: 30px; letter-spacing: -.02em; }
+.dbill .due { margin-top: 20px; font-size: 13px; font-weight: 700; color: var(--red); }
+.hlx { position: relative; display: inline-block; }
+.box { position: absolute; inset: -5px -7px; border: 2.5px solid var(--brand); border-radius: 7px; opacity: 0; transform: scale(1.2); transition: opacity .25s, transform .25s; transition-delay: calc(var(--d) * 380ms + 350ms); }
+.box em { position: absolute; top: -21px; left: -2px; background: var(--brand); color: #fff; font: 800 10px/1 var(--font); letter-spacing: .04em; padding: 4px 6px; border-radius: 4px; font-style: normal; white-space: nowrap; }
+.s-scan .box { opacity: 1; transform: scale(1); }
+.scanline { position: absolute; left: 0; right: 0; top: -70px; height: 70px; background: linear-gradient(transparent, rgba(91,61,245,.22), transparent); pointer-events: none; }
+.s-scan .scanline { animation: billo-scan 1.3s ease-in-out 1 forwards; }
+@keyframes billo-scan { from { top: -70px; } to { top: 110%; } }
+/* 4. one tiny step */
+.dstep { position: absolute; left: 50%; top: 330px; width: 360px; display: flex; gap: 12px; align-items: flex-start; background: var(--ink); color: #fff; border-radius: 18px; padding: 16px 18px; box-shadow: 0 20px 40px rgba(28,25,48,.28);
+  opacity: 0; transform: translateX(-50%) translateY(18px); transition: .45s cubic-bezier(.2,.8,.2,1); z-index: 5; }
+.s-done .dstep { opacity: 1; transform: translateX(-50%) translateY(0); }
+.dstep .ck { width: 28px; height: 28px; border-radius: 9px; border: 2.5px solid #fff; flex: none; margin-top: 2px; }
+.dstep small { color: rgba(255,255,255,.7); font-size: 12.5px; } .dstep b { display: block; font-size: 17px; margin-top: 2px; }
+.drawer-foot { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.drawer-label { font-size: 13.5px; font-weight: 700; color: var(--muted); }
+.drawer-actions { display: flex; gap: 6px; opacity: 0; transition: opacity .4s; pointer-events: none; }
+.s-done .drawer-actions { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 880px) {
+  .drawer { margin: 10px auto 0; height: 500px; max-width: 420px; }
+  .env { width: 210px; height: 128px; }
+  .env .flap { height: 72px; }
+  .s-stack .env, .s-stack .env.hot { transform: translate(105px, 110px) rotate(-1deg); }
+  .s-bill .env.hot { transform: translate(105px, 200px); }
+  .dbill { width: 310px; } .dstep { width: 320px; top: 318px; }
+}
+@media (max-width: 460px) {
+  .drawer { transform: scale(.86); transform-origin: top center; margin-bottom: -60px; }
+}

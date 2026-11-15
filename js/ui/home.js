@@ -1,4 +1,5 @@
-import { SAMPLES, sampleSvg } from '../data/samples.js';
+import { SAMPLES, sampleFields } from '../data/samples.js';
+import { formatDate } from '../engine/dates.js';
 import { esc } from './dom.js';
 
 const SRC = {
@@ -6,9 +7,52 @@ const SRC = {
   tax: 'https://add.org/adhd-tax/',
 };
 
-export function renderHome() {
-  const demo = SAMPLES[0];
+// Low estimate of the yearly ADHD tax: 15.5M adults × $1,200 (CDC, ADDA) ≈ $590 every second.
+const TAX_PER_SECOND = (15.5e6 * 1200) / (365 * 24 * 3600);
+
+const ENVELOPES = [
+  { who: 'Brightline Wireless', what: 'Your bill is ready', x: 0, y: 40, r: 6 },
+  { who: 'Lone Star Power', what: 'Statement enclosed', x: 230, y: 10, r: -7 },
+  { who: 'Riverside Medical', what: 'Patient balance', x: 20, y: 250, r: -8 },
+  { who: 'StreamMax', what: 'Your plan renews soon', x: 250, y: 230, r: 5 },
+  { who: 'City of Riverside', what: 'Parking violation', x: 130, y: 130, r: -3, hot: true },
+];
+
+function drawerHtml() {
+  const ticket = SAMPLES.find((s) => s.key === 'ticket');
+  const f = sampleFields(ticket);
   return `
+  <div class="drawer" id="drawer" aria-label="Animated example: five unopened bills become one step">
+    ${ENVELOPES.map((e, i) => `
+      <button class="env ${e.hot ? 'hot' : ''}" style="--x:${e.x}px;--y:${e.y}px;--r:${e.r}deg;--i:${i}" aria-label="Open ${esc(e.who)}">
+        <span class="flap"></span>
+        <span class="to"><b>${esc(e.who)}</b>${esc(e.what)}</span>
+        ${e.hot ? '<span class="stamp">FINAL NOTICE</span>' : ''}
+      </button>`).join('')}
+    <div class="dbill" aria-hidden="true">
+      <span class="scanline"></span>
+      <div class="org">${esc(f.payee)}</div><div class="sub">Notice of parking violation</div>
+      <div class="row"><span>Expired meter · 412 Main St</span><span>$65.00</span></div>
+      <div class="row"><span>Penalty if unpaid after due date</span><span class="hlx">+$65.00<i class="box" style="--d:2"><em>LATE FEE ✓</em></i></span></div>
+      <div class="total"><span>Amount due</span><b class="hlx">$65.00<i class="box" style="--d:0"><em>AMOUNT ✓</em></i></b></div>
+      <div class="due"><span class="hlx">Due by ${esc(formatDate(f.dueDate))}<i class="box" style="--d:1"><em>3 DAYS LATE</em></i></span></div>
+    </div>
+    <div class="dstep" aria-hidden="true"><span class="ck"></span><div><small>Today · 5 min · words included</small><b>Pay $65 now and ask to drop the late fee</b></div></div>
+    <div class="drawer-foot">
+      <span class="drawer-label" id="drawer-label">Your drawer · 5 unopened · tap one</span>
+      <span class="drawer-actions"><a class="btn btn-primary btn-sm" href="#/scan/ticket">Read it with AI →</a><button class="btn btn-quiet btn-sm" id="replay">↻ Replay</button></span>
+    </div>
+  </div>`;
+}
+
+export function renderHome() {
+  return `
+  <div class="ticker" role="note">
+    <span>Since you opened this page, adults with ADHD in the U.S. lost</span>
+    <span class="ticker-num" id="tax-num">$0</span>
+    <span>to late fees, forgotten subscriptions &amp; overdrafts.</span>
+    <a class="ticker-src" href="${SRC.tax}" target="_blank" rel="noopener">Low estimate: 15.5M adults × $1,200/yr</a>
+  </div>
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
@@ -17,18 +61,11 @@ export function renderHome() {
         <p class="lede">Billo turns the bill you’ve been avoiding into 1–3 two-minute steps, reminds you on the right day, and celebrates every win. No budgets. No spreadsheets.</p>
         <div class="cta-row">
           <a class="btn btn-primary btn-lg" href="#/scan">📸 Snap a bill</a>
-          <a class="btn btn-ghost btn-lg" href="#/scan/power">Try a sample</a>
+          <a class="btn btn-ghost btn-lg" href="#/quiz">Find my money leaks</a>
         </div>
         <p class="fine mt-16">Works in your browser. Bills stay on your device.</p>
       </div>
-      <div class="phone" aria-label="Example">
-        <div class="mini-bill"><img src="${esc(sampleSvg(demo))}" alt="Sample power bill"></div>
-        <div class="arrow">↓</div>
-        <div class="step first" style="grid-template-columns:36px 1fr;padding:12px">
-          <span class="check" style="width:32px;height:32px;cursor:default"></span>
-          <div><h3 style="font-size:16px">Pay $142.37 today</h3><p style="font-size:14px">Due in 2 days. Takes 2 minutes and avoids a late fee.</p></div>
-        </div>
-      </div>
+      ${drawerHtml()}
     </div>
   </section>
 
@@ -79,4 +116,39 @@ export function renderHome() {
       <details><summary>Is my data private?</summary><p>There’s no account. The photo is sent once to Google Gemini to read the text; your bills and progress are stored only in this browser.</p></details>
     </div>
   </section>`;
+}
+
+/** Starts the live counter and the drawer animation. Stops itself when the page changes. */
+export function mountHome(root) {
+  root.innerHTML = renderHome();
+  const started = performance.now();
+  const num = root.querySelector('#tax-num');
+  const drawer = root.querySelector('#drawer');
+  const label = root.querySelector('#drawer-label');
+  const timers = [];
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  (function tick() {
+    if (!num.isConnected) { timers.forEach(clearTimeout); return; }
+    num.textContent = `$${Math.floor(((performance.now() - started) / 1000) * TAX_PER_SECOND).toLocaleString('en-US')}`;
+    requestAnimationFrame(tick);
+  }());
+
+  const later = (fn, ms) => timers.push(setTimeout(() => { if (drawer.isConnected) fn(); }, ms));
+  function play() {
+    timers.splice(0).forEach(clearTimeout);
+    drawer.className = 'drawer';
+    if (reduce) { drawer.classList.add('s-done'); label.textContent = '1 bill · 1 tiny step'; return; }
+    drawer.classList.add('s-stack');
+    label.textContent = 'Picking the one that matters…';
+    later(() => drawer.classList.add('s-open'), 750);
+    later(() => { drawer.classList.add('s-bill'); label.textContent = 'AI reading the bill…'; }, 1400);
+    later(() => drawer.classList.add('s-scan'), 1900);
+    later(() => { drawer.classList.add('s-done'); label.textContent = '5 unopened bills → 1 tiny step'; }, 3600);
+  }
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('.env')) play();
+    if (e.target.closest('#replay')) { drawer.className = 'drawer'; label.textContent = 'Your drawer · 5 unopened · tap one'; later(play, 900); }
+  });
+  later(play, 1800);
 }
