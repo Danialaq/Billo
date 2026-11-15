@@ -48,7 +48,7 @@
   <div class="logo" style="color:#fff"><span class="mark">b</span>billo</div>
   <h1 style="font-size:92px;font-weight:800;margin:70px 0 22px">Snap a bill.<br>Get <span style="color:#a996ff">one tiny step.</span></h1>
   <p class="sub" style="font-size:26px">The money coach for ADHD brains — turns the bill you’ve been avoiding into 1–3 two-minute steps.</p>
-  <p style="margin-top:46px;font-size:20px;line-height:1.7">Live: <b>danialaq.github.io/Billo</b><br>Code: <b>github.com/Danialaq/Billo</b><br>Track: <b>Money</b> · Business Cup 2.0 · Zimran × AIESEC</p>
+  <p style="margin-top:46px;font-size:20px;line-height:1.7">Live: <b>billo-liart.vercel.app</b><br>Code: <b>github.com/Danialaq/Billo</b><br>Track: <b>Money</b> · Business Cup 2.0 · Zimran × AIESEC</p>
   <div class="foot"><span>Danial Zhussupov · Nov 15, 2026</span><span>1 / 10</span></div>
 </section>
 
@@ -128,7 +128,7 @@
       <p class="note" style="margin:12px 0 0">Just one step — because that’s all she needs today. A phone bill due in 9 days gets: pick a pay day → pay on that day → turn on autopay.</p>
     </div>
   </div>
-  <div class="foot"><span>Live demo: danialaq.github.io/Billo → “Try a sample”</span><span>5 / 10</span></div>
+  <div class="foot"><span>Live demo: billo-liart.vercel.app → “Try a sample”</span><span>5 / 10</span></div>
 </section>
 
 <!-- 6. How it works -->
@@ -137,11 +137,11 @@
   <h2>AI reads. Rules decide.</h2>
   <p class="sub">The model never invents advice. It extracts what’s printed; a deterministic engine turns that into steps. Same bill, same day → same answer.</p>
   <div class="grid3" style="margin-top:34px">
-    <div class="card"><h3 style="font-size:24px">1 · Read</h3><p>Gemini 3.5 Flash (vision) → JSON: payee, amount, due date, late fee, confidence, plain-English summary. Auto-fallback across models; low confidence is flagged.</p></div>
+    <div class="card"><h3 style="font-size:24px">1 · Read</h3><p>Gemini 3.5 Flash-Lite (vision) → JSON: payee, amount, due date, late fee, confidence, plain-English summary. Auto-fallback across models; low confidence is flagged.</p></div>
     <div class="card"><h3 style="font-size:24px">2 · Decide</h3><p>Rule engine: late / due ≤3 days / later / no date × can-pay × bill type (medical, subscription, fine…) → max 3 steps, call scripts, .ics reminders.</p></div>
     <div class="card"><h3 style="font-size:24px">3 · Return</h3><p>Today queue sorts every open step by urgency; streaks and “late fees avoided” update on every tap.</p></div>
   </div>
-  <p class="note" style="margin-top:22px">Static web app, no backend · 11 unit tests on the engine · works on phone and desktop · demo never breaks: samples fall back to known values if AI is busy.</p>
+  <p class="note" style="margin-top:22px">Measured: 5/5 sample bills read exactly (amount, due date, type, late fee), ~4.6 s each · next: accuracy on 50 real photos · static app + one serverless function, key never in the page · 11 unit tests · works on phone and desktop · demo never breaks: samples fall back to known values if AI is busy.</p>
   <div class="foot"><span>github.com/Danialaq/Billo</span><span>6 / 10</span></div>
 </section>
 
@@ -230,7 +230,7 @@
     <div style="display:flex;flex-direction:column;justify-content:center">
       <div class="logo" style="color:#fff;font-size:44px"><span class="mark" style="width:60px;height:60px;font-size:34px">b</span>billo</div>
       <p class="sub" style="margin-top:18px;font-size:26px">Snap a bill. Get one tiny step.<br>Stop paying the ADHD tax.</p>
-      <p style="margin-top:24px;font-size:20px">Try it now: <b>danialaq.github.io/Billo</b></p>
+      <p style="margin-top:24px;font-size:20px">Try it now: <b>billo-liart.vercel.app</b></p>
     </div>
   </div>
   <div class="foot"><span>Not financial advice</span><span>10 / 10</span></div>

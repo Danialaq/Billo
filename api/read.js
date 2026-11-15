@@ -2,7 +2,7 @@
 // The API key lives only in the server environment (GEMINI_API_KEY), never in the page.
 
 const TYPES = ['utility', 'phone', 'rent', 'subscription', 'medical', 'fine', 'other'];
-const MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest'];
+const MODELS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest'];
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 const MAX_BASE64 = 6_000_000;
 

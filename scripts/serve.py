@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TYPES = ["utility", "phone", "rent", "subscription", "medical", "fine", "other"]
-MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]
+MODELS = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-flash-latest"]
 PROMPT = (
     "You read one U.S. bill, statement, renewal notice or ticket.\nReturn ONLY JSON with these keys:\n"
     '{"payee": string, "type": one of ' + json.dumps(TYPES) + ', "amount": number (the total amount due now, no $),\n'

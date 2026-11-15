@@ -1,6 +1,6 @@
 # Billo — snap a bill, get one tiny step
 
-**Live:** see the repository description (deployed on Vercel)
+**Live:** https://billo-liart.vercel.app
 
 Billo is a money coach for ADHD brains. You snap the bill you've been avoiding; AI reads who, how much and when; Billo's rule engine turns it into 1–3 two-minute steps, reminds you on the right day, and celebrates every win.
 
