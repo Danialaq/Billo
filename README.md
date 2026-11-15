@@ -19,8 +19,11 @@ Built in 24 hours for **Business Cup 2.0** (Zimran × AIESEC, Nazarbayev Univers
 | **Snap a bill** | Photo, PDF or screenshot → Google Gemini extracts payee, amount, due date, late fee and a one-line plain-English summary. Every field is editable; low confidence is flagged. |
 | **Sample bills** | 5 realistic bills (power, parking ticket, subscription, doctor, phone). Samples are rendered to an image and go through the **same AI reading**; if the AI is busy, known values are used so the demo never breaks. |
 | **1–3 tiny steps** | Deterministic rules (not AI) decide the steps: pay today, call for a fee waiver or payment plan (with the exact words), pick a pay day 2 days early (.ics reminder), keep-or-cancel for subscriptions, "ask for an itemized bill" for medical bills, turn on autopay. |
-| **Today** | Daily check-in: the one most urgent step, streak, late fees avoided, what's coming up. |
+| **Today** | Daily check-in: the one most urgent step, streak, late fees avoided. |
+| **Money week** | A 14-day strip on Today: due dates, pay days, tiny steps and finished steps per day. **Add all to my calendar** exports every future pay day and due date as one `.ics` file with 7-day reminders. |
+| **Any language, any currency** | Bills in Russian, Kazakh, Spanish… are read too; the AI returns an ISO currency code and every amount shows in it (tested on a real Astana utility bill: ₸28,095.79, due date and type read correctly). Late-fee savings are only counted for USD bills. |
 | **Money-leak quiz** | 6 taps → personal yearly "ADHD tax" estimate with every assumption shown. |
+| **Share my ADHD tax** | One tap draws a 1080×1350 card (total + top 3 leaks + link) and opens the phone's share sheet; on desktop it downloads the image and copies a caption. Our free acquisition loop. |
 | **Billo Plus** | Paywall ($9.99/mo or $59.99/yr, 7-day trial). Demo unlocks without payment. |
 
 No account, no database, no bank links. Bills and progress live in `localStorage`. The photo goes to one tiny serverless function (`api/read.js`) that calls Gemini; the API key stays in a server environment variable and never reaches the page.
@@ -80,9 +83,10 @@ js/
   ai/gemini.js        photo/PDF → downscale → POST /api/read → cleaned fields
   engine/steps.js     bill → 1–3 steps, urgency, today queue, streak
   engine/leaks.js     quiz → money-leak map
+  engine/week.js      14-day money week and calendar export
   engine/dates.js, money.js, ics.js
   data/samples.js     sample bills rendered as SVG
-  ui/                 views: home, scan, bill, today, quiz/leaks/plus
+  ui/                 views: home, scan, bill, today, quiz/leaks/plus, share card
 api/read.js           Vercel function: Gemini call with model fallback and timeouts (key from env)
 scripts/serve.py      local server with the same /api/read endpoint
 tests/engine.test.js  node --test

@@ -137,7 +137,7 @@
   </div>
   <div style="position:absolute;left:72px;right:72px;bottom:62px;display:flex;gap:14px">
     <div class="card" style="flex:1"><div class="num" style="font-size:40px;color:var(--yellow)">5 / 5</div><div style="opacity:.75;margin-top:4px">sample bills read exactly: amount, due date, type, late fee</div></div>
-    <div class="card" style="flex:1"><div class="num" style="font-size:40px">~4.6s</div><div style="opacity:.75;margin-top:4px">per bill, with automatic model fallback</div></div>
+    <div class="card" style="flex:1"><div class="num" style="font-size:40px">₸28,095.79</div><div style="opacity:.75;margin-top:4px">a real Astana utility bill in Russian, read correctly in ~5 s — any language, any currency</div></div>
     <div class="card" style="flex:1"><div class="num" style="font-size:40px">0</div><div style="opacity:.75;margin-top:4px">API keys in the page — one serverless function holds it</div></div>
     <div class="card" style="flex:1"><div class="num" style="font-size:40px">11</div><div style="opacity:.75;margin-top:4px">unit tests on the step engine</div></div>
   </div>
@@ -163,7 +163,7 @@
   </div>
   <div style="position:absolute;right:72px;bottom:56px;width:440px" class="card">
     <b style="font:800 20px 'Bricolage Grotesque'">Why they open it tomorrow</b>
-    <div style="color:var(--ink2);margin-top:8px;line-height:1.55;font-size:15.5px">Every bill becomes a <b>pay day</b> on Today · bills never stop coming · streak + “late fees avoided” counter · renewals ping before they charge</div>
+    <div style="color:var(--ink2);margin-top:8px;line-height:1.55;font-size:15.5px">Every bill becomes a <b>pay day</b> on a 14-day money week · one tap adds all of them to your calendar · streak + “late fees avoided” counter · renewals ping before they charge</div>
   </div>
   <div class="pg">07</div>
 </section>
@@ -192,7 +192,7 @@
   <div class="k">08 · Go-to-market & unit economics</div>
   <h2 style="margin-top:14px;max-width:760px">The ADHD internet is already talking about this.</h2>
   <div style="position:absolute;left:72px;right:72px;top:250px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-    <div class="card" style="height:190px"><div style="font-size:30px">🧾</div><b style="font:800 21px 'Bricolage Grotesque';display:block;margin-top:8px">Hook</b><div style="color:var(--ink2);margin-top:6px">“How much is your ADHD tax?” quiz → a personal $ number. Shareable, built for TikTok & Reels.</div></div>
+    <div class="card" style="height:190px"><div style="font-size:30px">🧾</div><b style="font:800 21px 'Bricolage Grotesque';display:block;margin-top:8px">Hook</b><div style="color:var(--ink2);margin-top:6px">“How much is your ADHD tax?” quiz → a personal $ number → one-tap <b>share card</b> sized for TikTok & Reels.</div></div>
     <div class="card" style="height:190px"><div style="font-size:30px">🎥</div><b style="font:800 21px 'Bricolage Grotesque';display:block;margin-top:8px">Channels</b><div style="color:var(--ink2);margin-top:6px">ADHD creators (UGC), paid Meta/TikTok to the quiz, ADHD coaches & clinics as partners.</div></div>
     <div class="card" style="height:190px"><div style="font-size:30px">⚙️</div><b style="font:800 21px 'Bricolage Grotesque';display:block;margin-top:8px">Margins</b><div style="color:var(--ink2);margin-top:6px">No database, no bank links. AI cost per scan is a tiny fraction of a $5/month ARPU.</div></div>
   </div>
@@ -222,7 +222,7 @@
 <script>
   // Repeated blocks are built here so the slide markup above stays readable.
   const needs = ['Not a budget — one next move', 'Tiny: under 5 minutes, done today', 'The exact words when she has to call', 'A reminder before it’s late, not after', 'A small win she can feel'];
-  const phones = [['bill.jpg', '1 · Snap', 'AI reads who, how much, when. Every field editable.'], ['today.jpg', '2 · Today', 'One thing a day, a streak, late fees avoided.'], ['leaks.jpg', '3 · Money leaks', 'Your yearly ADHD tax in 6 taps → paywall.']];
+  const phones = [['bill.jpg', '1 · Snap', 'AI reads who, how much, when. Every field editable.'], ['today.jpg', '2 · Today + money week', 'One thing a day, 14-day pay calendar, one tap to your calendar.'], ['leaks.jpg', '3 · Money leaks', 'Your yearly ADHD tax in 6 taps → share card → paywall.']];
   const flow = [['📸', 'Snap', 'Photo, PDF or a sample bill'], ['🤖', 'AI reads', 'Gemini 3.5 Flash-Lite → JSON: payee, amount, due date, late fee'], ['📏', 'Rules decide', 'Late? Due soon? Can pay? Bill type? → max 3 steps + call script'], ['✅', 'Today', 'Pay days, reminders (.ics), streak, fees avoided']];
   const funnel = ['TikTok / Reels ad', '“What’s your ADHD tax?” quiz', 'First free bill scan → one step', 'Leak map → Billo Plus paywall'];
   const ladder = [['1', 'Own ADHD money in the U.S.', '$20–32M'], ['2', 'Couples & households · higher ARPU', '+'], ['3', 'UK · Canada · Australia', '+'], ['4', 'Anyone budgets fail · no diagnosis', '≈ $100M']];
