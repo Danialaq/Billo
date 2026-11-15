@@ -1,0 +1,12 @@
+{
+  "name": "billo",
+  "version": "1.0.0",
+  "description": "Snap a bill, get one tiny step. A money coach for ADHD brains.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "npx --yes serve -l 5174 ."
+  },
+  "license": "MIT"
+}

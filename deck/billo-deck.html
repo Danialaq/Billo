@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Billo — Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  :root { --ink:#1c1930; --ink2:#3d3956; --muted:#6c6884; --brand:#5b3df5; --brand-soft:#eeeaff; --mint:#0f9f6e; --mint-soft:#e2f6ee; --red:#c2341d; --red-soft:#fdebe7; --amber:#b45d06; --amber-soft:#fdf0de; --bg:#fbf8f4; --line:#e7e1d9; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; color: var(--ink); background: #ddd; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .slide { width: 1280px; height: 720px; background: var(--bg); position: relative; overflow: hidden; padding: 64px 76px; page-break-after: always; break-after: page; margin: 0 auto 20px; }
+  @media print { body { background: none; } .slide { margin: 0; } }
+  h1, h2, h3 { font-family: 'Bricolage Grotesque', Inter, sans-serif; letter-spacing: -.025em; margin: 0; line-height: 1.05; }
+  h2 { font-size: 50px; font-weight: 800; margin-bottom: 14px; }
+  .kicker { font-size: 15px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px; }
+  .sub { font-size: 23px; color: var(--ink2); max-width: 900px; line-height: 1.4; margin: 0; }
+  .foot { position: absolute; left: 76px; right: 76px; bottom: 28px; display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+  .logo { display: inline-flex; align-items: center; gap: 12px; font: 800 30px/1 'Bricolage Grotesque', sans-serif; }
+  .mark { width: 44px; height: 44px; border-radius: 13px; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 26px; transform: rotate(-6deg); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 26px; }
+  .big { font: 800 58px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -.03em; }
+  .card p { margin: 10px 0 0; font-size: 18px; color: var(--ink2); line-height: 1.4; }
+  .src { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .pill { display: inline-block; font-size: 14px; font-weight: 800; padding: 5px 12px; border-radius: 999px; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; margin-top: 10px; }
+  .step.first { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+  .box { width: 30px; height: 30px; border-radius: 10px; border: 2px solid #cfc6ba; }
+  .step b { font-size: 17px; } .step span { display: block; font-size: 14px; color: var(--ink2); margin-top: 3px; }
+  table { border-collapse: collapse; width: 100%; font-size: 17px; }
+  td, th { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .note { font-size: 14px; color: var(--muted); }
+  .dark { background: var(--ink); color: #fff; }
+  .dark .sub { color: #d9d6ea; } .dark .foot { color: #a9a5c3; }
+  ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; font-size: 20px; }
+  ul.clean li::before { content: '→ '; color: var(--brand); font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- 1. Title -->
+<section class="slide dark">
+  <div class="logo" style="color:#fff"><span class="mark">b</span>billo</div>
+  <h1 style="font-size:92px;font-weight:800;margin:70px 0 22px">Snap a bill.<br>Get <span style="color:#a996ff">one tiny step.</span></h1>
+  <p class="sub" style="font-size:26px">The money coach for ADHD brains — turns the bill you’ve been avoiding into 1–3 two-minute steps.</p>
+  <p style="margin-top:46px;font-size:20px;line-height:1.7">Live: <b>danialaq.github.io/Billo</b><br>Code: <b>github.com/Danialaq/Billo</b><br>Track: <b>Money</b> · Business Cup 2.0 · Zimran × AIESEC</p>
+  <div class="foot"><span>Danial Zhussupov · Nov 15, 2026</span><span>1 / 10</span></div>
+</section>
+
+<!-- 2. Problem -->
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h2>ADHD brains pay a tax for being human.</h2>
+  <p class="sub">A bill arrives. It feels heavy. It goes in a drawer. A week later it comes back with a late fee. Not laziness — executive dysfunction.</p>
+  <div class="grid3" style="margin-top:38px">
+    <div class="card"><div class="big">15.5M</div><p>U.S. adults with a current ADHD diagnosis — 56% diagnosed as adults</p><div class="src">CDC NHIS 2023, via CHADD</div></div>
+    <div class="card"><div class="big" style="color:var(--red)">$1.2–3K</div><p>lost per year to the “ADHD tax”: late fees, forgotten subscriptions, impulse buys</p><div class="src">ADDA</div></div>
+    <div class="card"><div class="big">40% <span style="font-size:30px;color:var(--muted)">vs 18%</span></div><p>of adults with ADHD paid an overdraft fee in a year, vs. the general public</p><div class="src">Financial Health Network, cited by ADDA</div></div>
+  </div>
+  <div class="foot"><span>billo</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3. Who -->
+<section class="slide">
+  <div class="kicker">Who we sell to</div>
+  <h2>Working adults, 25–45, who freeze in front of bills.</h2>
+  <div class="grid2" style="margin-top:30px">
+    <div class="card">
+      <div class="pill" style="background:var(--brand-soft);color:var(--brand)">Persona</div>
+      <h3 style="font-size:32px;margin-top:14px">Jess, 31, Austin</h3>
+      <p>UX designer, $72k. Diagnosed at 28. Good at her job, terrible at mail. Three apps for budgets — all abandoned in a week.</p>
+      <p>“I <b>have</b> the money. I just can’t make myself open the envelope.”</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:24px;margin-bottom:12px">What she actually needs</h3>
+      <ul class="clean">
+        <li>Not a budget — one next move</li>
+        <li>Tiny: under 5 minutes, done today</li>
+        <li>The exact words when she has to call</li>
+        <li>A reminder <i>before</i> it’s late, not after</li>
+        <li>A small win she can feel (dopamine)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Persona is illustrative, built from the statistics on slide 2</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4. Gap -->
+<section class="slide">
+  <div class="kicker">Why nothing works today</div>
+  <h2>Money apps need discipline. ADHD apps skip money.</h2>
+  <table style="margin-top:26px">
+    <tr><th></th><th>Who</th><th>Proof people pay</th><th>Why it fails Jess</th></tr>
+    <tr><td><b>Budget apps</b></td><td>YNAB, Monarch</td><td>YNAB ~$47M revenue (2025); Monarch 500k+ paying, $850M valuation</td><td>Daily logging and categories — the discipline she doesn’t have</td></tr>
+    <tr><td><b>ADHD apps</b></td><td>Inflow, Tiimo, Shimmer</td><td>Inflow raised $16.7M; Shimmer coaching $140–345/mo</td><td>Focus and tasks — nothing about bills or money</td></tr>
+    <tr><td><b>Bank alerts</b></td><td>Every bank</td><td>Free</td><td>Tell her it’s late; never what to do next</td></tr>
+    <tr><td><b>AI chat</b></td><td>ChatGPT, Gemini</td><td>Free</td><td>Needs a good prompt, no memory of due dates, no reminders</td></tr>
+  </table>
+  <p class="sub" style="margin-top:26px;font-size:24px"><b>Billo sits in the empty middle:</b> ADHD-first design × money × zero setup.</p>
+  <div class="foot"><span>Sources: company disclosures and press (YNAB, Monarch/PYMNTS, Tracxn, Shimmer)</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5. Product -->
+<section class="slide">
+  <div class="kicker">The product</div>
+  <h2>Snap → 10 seconds → one tiny step.</h2>
+  <div class="grid2" style="margin-top:22px;grid-template-columns:.9fr 1.1fr;align-items:start">
+    <div>
+      <ul class="clean" style="font-size:21px">
+        <li><b>Snap</b> any bill, ticket, renewal or PDF</li>
+        <li><b>AI reads</b> who, how much, when, late fee — every field editable</li>
+        <li><b>1–3 steps</b>, each under 5 minutes, with call scripts</li>
+        <li><b>Today</b>: one thing a day, a streak, late fees avoided</li>
+        <li><b>Money-leak map</b>: your yearly ADHD tax in 6 taps</li>
+      </ul>
+      <p class="note" style="margin-top:22px">No account. No bank link. Bills live in the browser.</p>
+    </div>
+    <div class="card" style="padding:20px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill" style="background:var(--mint-soft);color:var(--mint)">✓ Read by AI</span><span class="pill" style="background:var(--red-soft);color:var(--red)">3 days late</span></div>
+      <h3 style="font-size:26px;margin:10px 0 2px">City of Riverside Parking</h3>
+      <div class="note">A $65 parking ticket that was due 3 days ago; the penalty doubles it.</div>
+      <div class="step first"><span class="box"></span><div><b>Pay $65.00 now and ask to drop the late fee</b><span>Many cities waive the first penalty. 5 min · “What to say” script included</span></div></div>
+      <p class="note" style="margin:12px 0 0">Just one step — because that’s all she needs today. A phone bill due in 9 days gets: pick a pay day → pay on that day → turn on autopay.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Live demo: danialaq.github.io/Billo → “Try a sample”</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6. How it works -->
+<section class="slide">
+  <div class="kicker">It really works</div>
+  <h2>AI reads. Rules decide.</h2>
+  <p class="sub">The model never invents advice. It extracts what’s printed; a deterministic engine turns that into steps. Same bill, same day → same answer.</p>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card"><h3 style="font-size:24px">1 · Read</h3><p>Gemini 3.5 Flash (vision) → JSON: payee, amount, due date, late fee, confidence, plain-English summary. Auto-fallback across models; low confidence is flagged.</p></div>
+    <div class="card"><h3 style="font-size:24px">2 · Decide</h3><p>Rule engine: late / due ≤3 days / later / no date × can-pay × bill type (medical, subscription, fine…) → max 3 steps, call scripts, .ics reminders.</p></div>
+    <div class="card"><h3 style="font-size:24px">3 · Return</h3><p>Today queue sorts every open step by urgency; streaks and “late fees avoided” update on every tap.</p></div>
+  </div>
+  <p class="note" style="margin-top:22px">Static web app, no backend · 11 unit tests on the engine · works on phone and desktop · demo never breaks: samples fall back to known values if AI is busy.</p>
+  <div class="foot"><span>github.com/Danialaq/Billo</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7. What we sell -->
+<section class="slide">
+  <div class="kicker">What we sell & why they come back tomorrow</div>
+  <h2>Value first. Paywall second.</h2>
+  <div class="grid2" style="margin-top:24px">
+    <div class="card">
+      <h3 style="font-size:26px">Billo Plus</h3>
+      <div style="display:flex;gap:22px;margin:14px 0"><div><div class="big" style="font-size:46px">$9.99</div><div class="note">per month</div></div><div><div class="big" style="font-size:46px;color:var(--mint)">$59.99</div><div class="note">per year · 7-day trial</div></div></div>
+      <p>Free: 3 scans a month. Plus: unlimited scans, calendar reminders, keep-or-cancel before renewals, call scripts, household view.</p>
+      <p class="note">Funnel: first scan (free) → leak-map quiz → paywall, the web-to-app model Zimran-style apps already scale.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:26px">Why they come back tomorrow</h3>
+      <ul class="clean" style="font-size:19px;margin-top:14px">
+        <li>Every bill becomes a <b>pay day</b> → it shows up on Today</li>
+        <li>Bills never stop: power, phone, rent, renewals, tickets</li>
+        <li>Streak + “late fees avoided” counter = visible progress</li>
+        <li>Pays for itself: the leak map shows ADHD tax ≫ $59.99</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Prices are launch hypotheses to test</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8. Market -->
+<section class="slide">
+  <div class="kicker">Why it makes money</div>
+  <h2>A wedge into a proven $100M+ category.</h2>
+  <div class="grid2" style="margin-top:20px;grid-template-columns:1fr 1.1fr">
+    <div class="card">
+      <table style="font-size:17px">
+        <tr><th>Market</th><th>Size</th></tr>
+        <tr><td><b>TAM</b> · U.S. adults with ADHD</td><td>15.5M</td></tr>
+        <tr><td><b>SAM</b> · 25–45, money problems*</td><td>~7–8M</td></tr>
+        <tr><td><b>SOM</b> · 5 yrs, 3–5% of SAM*</td><td>250–400k payers</td></tr>
+        <tr><td><b>ARR at SOM</b> × ~$80</td><td>$20–32M</td></tr>
+      </table>
+      <p class="note">*Assumptions. Proof the category pays: YNAB ~450k payers, Monarch 500k+.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:24px;margin-bottom:10px">Ladder to $100M ARR</h3>
+      <ul class="clean" style="font-size:18.5px">
+        <li><b>1.</b> Own ADHD money in the U.S. (brand, creators)</li>
+        <li><b>2.</b> Couples & households — one partner with ADHD, shared bills, higher ARPU</li>
+        <li><b>3.</b> UK, Canada, Australia — same language, same ads</li>
+        <li><b>4.</b> Everyone budgets don’t work for — no diagnosis needed</li>
+      </ul>
+      <p style="font-size:19px;margin-top:14px"><b>~800k payers × ~$125 ARPU ≈ $100M ARR</b></p>
+    </div>
+  </div>
+  <div class="foot"><span>Expansion goes outward from the niche, not away from it</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9. GTM & unit economics -->
+<section class="slide">
+  <div class="kicker">Go-to-market & unit economics</div>
+  <h2>The ADHD internet is already talking about this.</h2>
+  <div class="grid3" style="margin-top:28px">
+    <div class="card"><h3 style="font-size:22px">Hook</h3><p>“How much is your ADHD tax?” quiz → personal $ number. Shareable, emotional, made for TikTok & Reels.</p></div>
+    <div class="card"><h3 style="font-size:22px">Channels</h3><p>ADHD creators (UGC), paid Meta/TikTok to the quiz, ADHD coaches & clinics as partners — a channel with no paid CAC.</p></div>
+    <div class="card"><h3 style="font-size:22px">Margins</h3><p>No backend; AI cost per scan is a tiny fraction of a $5/mo yearly ARPU. Gross margin is mostly payment & store fees.</p></div>
+  </div>
+  <div class="card" style="margin-top:20px;display:flex;gap:40px;align-items:center">
+    <div><div class="note">Targets to validate in the first 60 days</div><div style="font-size:22px;margin-top:6px"><b>Quiz → trial 8–12%</b> · <b>trial → paid 35%+</b> · <b>CAC &lt; $30</b> · <b>LTV ≥ $80</b> → LTV/CAC ≥ 2.7</div></div>
+  </div>
+  <div class="foot"><span>All conversion and CAC numbers are targets, not results</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10. Roadmap -->
+<section class="slide dark">
+  <div class="kicker" style="color:#a996ff">What’s next</div>
+  <h2 style="color:#fff">From one bill to a calm money life.</h2>
+  <div class="grid2" style="margin-top:28px">
+    <div>
+      <ul class="clean" style="font-size:21px;color:#fff">
+        <li><b>Next 30 days:</b> 50 real users from ADHD communities; measure D7/D30 retention and scan accuracy on real bills</li>
+        <li><b>Pause before you buy:</b> a 10-second check for impulse purchases</li>
+        <li><b>Receipts:</b> “return by” reminders</li>
+        <li><b>Email forwarding:</b> forward bills instead of snapping</li>
+        <li><b>Household plan</b> and native apps</li>
+      </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;justify-content:center">
+      <div class="logo" style="color:#fff;font-size:44px"><span class="mark" style="width:60px;height:60px;font-size:34px">b</span>billo</div>
+      <p class="sub" style="margin-top:18px;font-size:26px">Snap a bill. Get one tiny step.<br>Stop paying the ADHD tax.</p>
+      <p style="margin-top:24px;font-size:20px">Try it now: <b>danialaq.github.io/Billo</b></p>
+    </div>
+  </div>
+  <div class="foot"><span>Not financial advice</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>
