@@ -59,6 +59,7 @@ function clean(json) {
     lateFee: Number.isFinite(Number(json.lateFee)) && json.lateFee !== null ? Number(json.lateFee) : null,
     accountNumber: typeof json.accountNumber === 'string' ? json.accountNumber.slice(0, 30) : '',
     autopay: json.autopay === true,
+    currency: /^[A-Z]{3}$/.test(json.currency || '') ? json.currency : 'USD',
     confidence: Math.max(0, Math.min(1, Number(json.confidence) || 0)),
     summary: typeof json.summary === 'string' ? json.summary.slice(0, 220) : '',
   };

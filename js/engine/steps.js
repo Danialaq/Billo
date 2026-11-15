@@ -2,7 +2,7 @@
 // Deterministic: the same bill on the same day always gives the same 1–3 steps.
 
 import { addDays, daysBetween, formatDate, todayISO } from './dates.js';
-import { num, round2, usd } from './money.js';
+import { num, round2, money } from './money.js';
 
 export const BILL_TYPES = [
   { value: 'utility', label: 'Utility (power, water, gas)', recurring: true },
@@ -31,6 +31,7 @@ export function normalizeBill(raw = {}) {
     canPay: ['yes', 'no'].includes(raw.canPay) ? raw.canPay : 'yes',
     autopay: Boolean(raw.autopay),
     recurring: raw.recurring === undefined ? TYPE_BY_VALUE[type].recurring : Boolean(raw.recurring),
+    currency: /^[A-Z]{3}$/.test(raw.currency || '') ? raw.currency : 'USD',
   };
 }
 
@@ -45,15 +46,17 @@ export function urgency(bill, today = todayISO()) {
 }
 
 function feeText(bill) {
-  return bill.lateFee !== null ? usd(bill.lateFee) : `about ${usd(ASSUMED_LATE_FEE, { cents: false })}`;
+  if (bill.lateFee !== null) return money(bill.lateFee, bill.currency);
+  // The assumed fee is a U.S. figure; for other currencies we don't guess a number.
+  return bill.currency === 'USD' ? `about ${money(ASSUMED_LATE_FEE, 'USD', { cents: false })}` : 'whatever the bill charges';
 }
 
 function scriptWaive(bill) {
-  return `"Hi, I'm calling about account ${bill.accountNumber || '[number on the bill]'}. I missed the due date on ${formatDate(bill.dueDate)}. I'd like to pay ${usd(bill.amount)} today. Could you waive the late fee as a one-time courtesy? Thank you."`;
+  return `"Hi, I'm calling about account ${bill.accountNumber || '[number on the bill]'}. I missed the due date on ${formatDate(bill.dueDate)}. I'd like to pay ${money(bill.amount, bill.currency)} today. Could you waive the late fee as a one-time courtesy? Thank you."`;
 }
 
 function scriptPlan(bill) {
-  return `"Hi, I'm calling about account ${bill.accountNumber || '[number on the bill]'}. I can't pay the full ${usd(bill.amount)} by ${formatDate(bill.dueDate) || 'the due date'}. Can we set up a payment plan or move the due date? What's the smallest amount I can pay today to avoid a late fee?"`;
+  return `"Hi, I'm calling about account ${bill.accountNumber || '[number on the bill]'}. I can't pay the full ${money(bill.amount, bill.currency)} by ${formatDate(bill.dueDate) || 'the due date'}. Can we set up a payment plan or move the due date? What's the smallest amount I can pay today to avoid a late fee?"`;
 }
 
 function step(id, fields) {
@@ -68,7 +71,8 @@ export function buildSteps(raw, today = todayISO()) {
   const bill = normalizeBill(raw);
   const u = urgency(bill, today);
   const steps = [];
-  const fee = bill.lateFee !== null ? bill.lateFee : ASSUMED_LATE_FEE;
+  // "Late fees avoided" is counted in dollars, so only U.S. bills add to it.
+  const fee = bill.currency !== 'USD' ? 0 : (bill.lateFee !== null ? bill.lateFee : ASSUMED_LATE_FEE);
 
   // Bills that need a check before any money moves.
   if (bill.type === 'medical') {
@@ -84,7 +88,7 @@ export function buildSteps(raw, today = todayISO()) {
   if (bill.type === 'subscription') {
     steps.push(step('keep-or-cancel', {
       title: `Keep or cancel ${bill.payee}?`,
-      detail: `If you haven’t used it in the last 2 weeks, cancel now — it renews for ${usd(bill.amount)}${bill.dueDate ? ` on ${formatDate(bill.dueDate)}` : ''}. Search “cancel ${bill.payee}” or open Settings → Subscriptions on your phone.`,
+      detail: `If you haven’t used it in the last 2 weeks, cancel now — it renews for ${money(bill.amount, bill.currency)}${bill.dueDate ? ` on ${formatDate(bill.dueDate)}` : ''}. Search “cancel ${bill.payee}” or open Settings → Subscriptions on your phone.`,
       minutes: 3,
       when: today,
       kind: 'decide',
@@ -94,7 +98,7 @@ export function buildSteps(raw, today = todayISO()) {
   // Timing steps.
   if (u.level === 'late') {
     steps.push(step('pay-now', {
-      title: bill.canPay === 'yes' ? `Pay ${usd(bill.amount)} now and ask to drop the late fee` : 'Call today: stop the fee from growing',
+      title: bill.canPay === 'yes' ? `Pay ${money(bill.amount, bill.currency)} now and ask to drop the late fee` : 'Call today: stop the fee from growing',
       detail: bill.canPay === 'yes'
         ? `It’s ${u.label}. Pay, then call and ask for a one-time courtesy waiver of the ${feeText(bill)} late fee — many companies say yes the first time.`
         : `It’s ${u.label}. Call and ask for a payment plan. A small payment today is better than silence.`,
@@ -106,7 +110,7 @@ export function buildSteps(raw, today = todayISO()) {
   } else if (u.level === 'today' || u.level === 'soon') {
     steps.push(step('pay-now', bill.canPay === 'yes'
       ? {
-        title: `Pay ${usd(bill.amount)} today`,
+        title: `Pay ${money(bill.amount, bill.currency)} today`,
         detail: `${u.label}. Paying now takes 2 minutes and avoids a late fee (${feeText(bill)}).`,
         when: today,
         kind: 'pay',
@@ -124,13 +128,13 @@ export function buildSteps(raw, today = todayISO()) {
     steps.push(step('pick-day', {
       title: `Lock in your pay day: ${formatDate(payDay)}`,
       detail: `Add a reminder now so future-you doesn’t have to remember. We’ll also show it on your Today screen.`,
-      calendar: { date: payDay, label: `Pay ${bill.payee} — ${usd(bill.amount)}` },
+      calendar: { date: payDay, label: `Pay ${bill.payee} — ${money(bill.amount, bill.currency)}` },
       minutes: 1,
       when: today,
       kind: 'remind',
     }));
     steps.push(step('pay-on-day', {
-      title: `Pay ${usd(bill.amount)}`,
+      title: `Pay ${money(bill.amount, bill.currency)}`,
       detail: `Your pay day for ${bill.payee}. Due ${formatDate(bill.dueDate)}.`,
       when: payDay,
       kind: 'pay',

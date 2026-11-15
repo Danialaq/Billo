@@ -14,11 +14,11 @@ ROOT = Path(__file__).resolve().parent.parent
 TYPES = ["utility", "phone", "rent", "subscription", "medical", "fine", "other"]
 MODELS = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-flash-latest"]
 PROMPT = (
-    "You read one U.S. bill, statement, renewal notice or ticket.\nReturn ONLY JSON with these keys:\n"
-    '{"payee": string, "type": one of ' + json.dumps(TYPES) + ', "amount": number (the total amount due now, no $),\n'
+    "You read one bill, statement, renewal notice or ticket, in any language.\nReturn ONLY JSON with these keys:\n"
+    '{"payee": string, "type": one of ' + json.dumps(TYPES) + ', "amount": number (the total amount due now, no currency symbol), "currency": ISO 4217 code (USD for $, KZT for ₸ or тг, RUB for ₽, EUR for €),\n'
     ' "dueDate": "YYYY-MM-DD" or null, "lateFee": number or null (only if printed), "accountNumber": string or null,\n'
     ' "autopay": boolean (true only if the bill says autopay is on), "confidence": number 0-1, '
-    '"summary": string (one plain sentence a stressed person can understand)}\n'
+    '"summary": string (one plain English sentence a stressed person can understand)}\n'
     "If a value is not printed, use null. Never guess an amount or a date. If the image is not a bill, set confidence to 0."
 )
 

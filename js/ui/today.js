@@ -1,7 +1,7 @@
 // "Today": the daily check-in. One thing to do, a streak, and money kept.
 
 import { todayQueue, streak, normalizeBill, urgency } from '../engine/steps.js';
-import { usd } from '../engine/money.js';
+import { usd, money } from '../engine/money.js';
 import { formatDate, todayISO, parseISO } from '../engine/dates.js';
 import { moneyWeek, calendarEvents } from '../engine/week.js';
 import { buildIcs } from '../engine/ics.js';
@@ -37,7 +37,7 @@ function weekHtml(week, selected) {
     <div class="week-day">
       <div class="wday-title">${esc(day === week[0] ? 'Today' : formatDate(day.date))}</div>
       ${day.items.length ? day.items.map((x) => `<a class="witem k-${x.kind}" href="#/bill/${esc(x.recordId)}">
-        <span class="wtag">${KIND_LABEL[x.kind]}</span><span class="wtext"><b>${esc(x.title)}</b><small>${esc(x.payee)}</small></span><span class="amt">${usd(x.amount)}</span></a>`).join('')
+        <span class="wtag">${KIND_LABEL[x.kind]}</span><span class="wtext"><b>${esc(x.title)}</b><small>${esc(x.payee)}</small></span><span class="amt">${money(x.amount, x.currency)}</span></a>`).join('')
         : '<p class="muted" style="margin:6px 0 0">Nothing on this day. Enjoy it.</p>'}
     </div>
     <div class="week-legend"><span><i class="dot-due"></i>Due</span><span><i class="dot-pay"></i>Pay day</span><span><i class="dot-task"></i>Tiny step</span><span><i class="dot-done"></i>Done</span></div>
@@ -94,7 +94,7 @@ export function mountToday(root) {
         const u = urgency(normalizeBill(r.bill), today);
         return `<a class="row" href="#/bill/${esc(r.id)}"><span class="em">${typeEmoji(r.bill.type)}</span>
           <span><b>${esc(r.bill.payee || 'Bill')}</b><small>${r.completedAt ? '✓ Done' : esc(u.label)}</small></span>
-          <span class="amt">${usd(r.bill.amount)}</span></a>`;
+          <span class="amt">${money(r.bill.amount, r.bill.currency)}</span></a>`;
       }).join('')}</div>
       <div class="cta-row mt-24"><a class="btn btn-primary" href="#/scan">📸 Snap another bill</a>${!s.quiz ? '<a class="btn btn-ghost" href="#/quiz">Find my money leaks</a>' : ''}</div>
     </div></div>`;

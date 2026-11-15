@@ -3,7 +3,7 @@
 
 import { addDays, todayISO } from './dates.js';
 import { normalizeBill } from './steps.js';
-import { usd } from './money.js';
+import { money } from './money.js';
 
 /**
  * @returns {{date: string, items: {kind: 'pay'|'task'|'due'|'done', title: string, payee: string, amount: number, recordId: string}[]}[]}
@@ -15,15 +15,15 @@ export function moneyWeek(records, today = todayISO(), days = 14) {
     const bill = normalizeBill(r.bill);
     for (const st of r.steps || []) {
       if (st.done && st.doneAt && byDate[st.doneAt]) {
-        byDate[st.doneAt].items.push({ kind: 'done', title: st.title, payee: bill.payee, amount: bill.amount, recordId: r.id });
+        byDate[st.doneAt].items.push({ kind: 'done', title: st.title, payee: bill.payee, amount: bill.amount, currency: bill.currency, recordId: r.id });
       } else if (!st.done) {
         // Overdue or undated steps belong to today.
         const day = !st.when || st.when < today ? today : st.when;
-        if (byDate[day]) byDate[day].items.push({ kind: st.kind === 'pay' ? 'pay' : 'task', title: st.title, payee: bill.payee, amount: bill.amount, recordId: r.id });
+        if (byDate[day]) byDate[day].items.push({ kind: st.kind === 'pay' ? 'pay' : 'task', title: st.title, payee: bill.payee, amount: bill.amount, currency: bill.currency, recordId: r.id });
       }
     }
     if (!r.completedAt && bill.dueDate && byDate[bill.dueDate]) {
-      byDate[bill.dueDate].items.push({ kind: 'due', title: `${bill.payee} due`, payee: bill.payee, amount: bill.amount, recordId: r.id });
+      byDate[bill.dueDate].items.push({ kind: 'due', title: `${bill.payee} due`, payee: bill.payee, amount: bill.amount, currency: bill.currency, recordId: r.id });
     }
   }
   const rank = { due: 0, pay: 1, task: 2, done: 3 };
@@ -39,10 +39,10 @@ export function calendarEvents(records, today = todayISO()) {
     const bill = normalizeBill(r.bill);
     for (const st of r.steps || []) {
       if (st.done || !st.when || st.when <= today) continue;
-      events.push({ date: st.when, label: st.kind === 'pay' ? `Pay ${bill.payee} — ${usd(bill.amount)}` : `${st.title}`, detail: `${st.title}. Open Billo for the details.` });
+      events.push({ date: st.when, label: st.kind === 'pay' ? `Pay ${bill.payee} — ${money(bill.amount, bill.currency)}` : `${st.title}`, detail: `${st.title}. Open Billo for the details.` });
     }
     if (bill.dueDate && bill.dueDate >= today) {
-      events.push({ date: bill.dueDate, label: `${bill.payee} due — ${usd(bill.amount)}`, detail: 'Due date from your bill. Pay a couple of days earlier to be safe.' });
+      events.push({ date: bill.dueDate, label: `${bill.payee} due — ${money(bill.amount, bill.currency)}`, detail: 'Due date from your bill. Pay a couple of days earlier to be safe.' });
     }
   }
   const seen = new Set();

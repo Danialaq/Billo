@@ -25,3 +25,16 @@ export function usd(n, { cents = true } = {}) {
     maximumFractionDigits: cents ? 2 : 0,
   });
 }
+
+/** Format an amount in the bill's own currency (ISO 4217). Falls back to USD. */
+export function money(n, currency = 'USD', { cents = true } = {}) {
+  const code = /^[A-Z]{3}$/.test(currency || '') ? currency : 'USD';
+  try {
+    return round2(num(n)).toLocaleString('en-US', {
+      style: 'currency', currency: code, currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0,
+    });
+  } catch {
+    return usd(n, { cents });
+  }
+}

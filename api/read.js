@@ -6,11 +6,11 @@ const MODELS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-lates
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 const MAX_BASE64 = 6_000_000;
 
-export const PROMPT = `You read one U.S. bill, statement, renewal notice or ticket.
+export const PROMPT = `You read one bill, statement, renewal notice or ticket, in any language.
 Return ONLY JSON with these keys:
-{"payee": string, "type": one of ${JSON.stringify(TYPES)}, "amount": number (the total amount due now, no $),
+{"payee": string, "type": one of ${JSON.stringify(TYPES)}, "amount": number (the total amount due now, no currency symbol), "currency": ISO 4217 code (USD for $, KZT for ₸ or тг, RUB for ₽, EUR for €),
  "dueDate": "YYYY-MM-DD" or null, "lateFee": number or null (only if printed), "accountNumber": string or null,
- "autopay": boolean (true only if the bill says autopay is on), "confidence": number 0-1, "summary": string (one plain sentence a stressed person can understand)}
+ "autopay": boolean (true only if the bill says autopay is on), "confidence": number 0-1, "summary": string (one plain English sentence a stressed person can understand)}
 If a value is not printed, use null. Never guess an amount or a date. If the image is not a bill, set confidence to 0.`;
 
 export async function readWithGemini({ mimeType, data }, apiKey, { timeoutMs = 12000 } = {}) {

@@ -2,7 +2,7 @@
 // Used right after a scan and when opening a saved bill.
 
 import { BILL_TYPES, buildSteps, ASSUMED_LATE_FEE } from '../engine/steps.js';
-import { usd } from '../engine/money.js';
+import { usd, money } from '../engine/money.js';
 import { formatDate, todayISO } from '../engine/dates.js';
 import { buildIcs } from '../engine/ics.js';
 import { esc, download, toast, copyText } from './dom.js';
@@ -79,7 +79,7 @@ export function renderBill(record) {
           <h2 style="font-size:28px;margin-top:10px">${esc(b.payee)}</h2>
           ${b.summary ? `<p class="summary">${esc(b.summary)}</p>` : ''}
           <div class="facts">
-            <div class="fact"><label for="f-amount">Amount</label><input id="f-amount" data-field="amount" inputmode="decimal" value="${esc(Number(b.amount || 0).toFixed(2))}"></div>
+            <div class="fact"><label for="f-amount">Amount${b.currency && b.currency !== 'USD' ? ` (${esc(b.currency)})` : ''}</label><input id="f-amount" data-field="amount" inputmode="decimal" value="${esc(Number(b.amount || 0).toFixed(2))}"></div>
             <div class="fact"><label for="f-due">Due date</label><input id="f-due" data-field="dueDate" type="date" value="${esc(b.dueDate)}"></div>
             <div class="fact"><label for="f-payee">Who</label><input id="f-payee" data-field="payee" value="${esc(b.payee)}"></div>
             <div class="fact"><label for="f-type">Type</label><select id="f-type" data-field="type">${BILL_TYPES.map((t) => `<option value="${t.value}" ${t.value === b.type ? 'selected' : ''}>${esc(t.label)}</option>`).join('')}</select></div>
@@ -97,7 +97,7 @@ export function renderBill(record) {
     <div class="panel">
       <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap">
         <h2 style="font-size:24px">Your ${record.steps.length === 1 ? 'one step' : `${record.steps.length} tiny steps`}</h2>
-        <span class="fine">${doneCount}/${record.steps.length} done${record.savingsIfOnTime ? ` · on time saves ${b.lateFee !== null && b.lateFee !== undefined ? usd(b.lateFee) : `~${usd(ASSUMED_LATE_FEE, { cents: false })}`}` : ''}</span>
+        <span class="fine">${doneCount}/${record.steps.length} done${record.savingsIfOnTime ? ` · on time saves ${b.lateFee !== null && b.lateFee !== undefined ? money(b.lateFee, b.currency) : `~${usd(ASSUMED_LATE_FEE, { cents: false })}`}` : ''}</span>
       </div>
       <div class="steps">${record.steps.map(stepHtml).join('')}</div>
     </div>`;
