@@ -295,3 +295,64 @@ section.block { padding: 48px 0; }
 @media (max-width: 460px) {
   .drawer { transform: scale(.86); transform-origin: top center; margin-bottom: -60px; }
 }
+
+/* ---------- scroll reveal */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--rd, 0) * 120ms); }
+.reveal.in { opacity: 1; transform: none; }
+.card.reveal { transform: translateY(40px) scale(.97); }
+.card.reveal.in { transform: none; }
+.card.reveal .num-badge { transition: transform .5s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--rd, 0) * 120ms + 350ms); transform: scale(0) rotate(-20deg); }
+.card.reveal.in .num-badge { transform: scale(1) rotate(0); }
+
+/* ---------- sample bills: a pile that fans out */
+.bill-fan { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 20px 0 10px; }
+.bill-fan.reveal { opacity: 1; transform: none; }
+.mini-bill2 { position: relative; display: grid; gap: 6px; align-content: start; min-height: 228px; padding: 18px 16px 16px; background: #fff; border: 1px solid var(--line); border-radius: 4px 4px 10px 10px; text-decoration: none; color: var(--ink);
+  box-shadow: 0 10px 26px rgba(40,25,10,.10); transform-origin: 50% 100%;
+  opacity: 0; transform: translateX(calc((2 - var(--i)) * 105%)) translateY(30px) rotate(calc(var(--r) * 2));
+  transition: transform .8s cubic-bezier(.2,.8,.2,1) calc(var(--i) * 90ms), opacity .5s ease calc(var(--i) * 90ms), box-shadow .2s; }
+.bill-fan.in .mini-bill2 { opacity: 1; transform: rotate(var(--r)); }
+.bill-fan.in .mini-bill2:hover { transform: translateY(-10px) rotate(0); box-shadow: 0 22px 40px rgba(40,25,10,.18); transition-delay: 0s; transition-duration: .25s; }
+.mini-bill2::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--ink); border-radius: 4px 4px 0 0; }
+.mini-bill2::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: -6px; height: 12px; background: radial-gradient(circle at 6px 0, transparent 5px, #fff 5.5px) 0 0 / 12px 12px repeat-x; }
+.mb-kind { font: 800 10.5px/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.mb-who { font: 800 16px/1.2 var(--display); letter-spacing: -.02em; min-height: 40px; }
+.mb-lines { display: grid; gap: 5px; margin: 4px 0 6px; }
+.mb-lines i { display: block; height: 6px; border-radius: 3px; background: var(--surface-2); }
+.mb-lines i:nth-child(2) { width: 78%; } .mb-lines i:nth-child(3) { width: 56%; }
+.mb-amt { font: 800 26px/1 var(--display); letter-spacing: -.03em; }
+.mini-bill2 .urgency { justify-self: start; font-size: 12px; padding: 3px 9px; }
+.mb-go { position: absolute; left: 16px; right: 16px; bottom: 14px; text-align: center; background: var(--brand); color: #fff; font-weight: 800; font-size: 14px; border-radius: 10px; padding: 9px; opacity: 0; transform: translateY(8px); transition: .2s; }
+.mini-bill2:hover .mb-go, .mini-bill2:focus-visible .mb-go { opacity: 1; transform: none; }
+
+/* ---------- leak CTA: a receipt you can't read yet */
+.leak-cta { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; background: var(--ink); color: #fff; border-radius: 30px; padding: 56px 56px; }
+.leak-cta h2 { font-size: clamp(34px, 4.4vw, 54px); font-weight: 800; margin: 16px 0 12px; }
+.leak-cta p { color: rgba(255,255,255,.75); font-size: 18px; line-height: 1.5; margin: 0 0 26px; max-width: 440px; }
+.leak-btn { background: #ffd36b; color: var(--ink); box-shadow: 0 0 0 0 rgba(255,211,107,.6); animation: leak-pulse 2.2s ease-out infinite; }
+.leak-btn:hover { background: #ffe39a; }
+.leak-btn span { display: inline-block; transition: transform .2s; } .leak-btn:hover span { transform: translateX(4px); }
+@keyframes leak-pulse { 0% { box-shadow: 0 0 0 0 rgba(255,211,107,.55); } 70% { box-shadow: 0 0 0 18px rgba(255,211,107,0); } 100% { box-shadow: 0 0 0 0 rgba(255,211,107,0); } }
+.leak-receipt { position: relative; z-index: 1; justify-self: center; width: 100%; max-width: 360px; background: #fffdf7; color: var(--ink); padding: 22px 22px 26px; border-radius: 6px 6px 0 0; transform: rotate(2deg); box-shadow: 0 30px 60px rgba(0,0,0,.35); font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 14px; }
+.leak-receipt::after { content: ''; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px; background: linear-gradient(-45deg, transparent 8px, #fffdf7 0) 0 0 / 16px 12px, linear-gradient(45deg, transparent 8px, #fffdf7 0) 0 0 / 16px 12px; }
+.lr-head { text-align: center; font-weight: 800; letter-spacing: .14em; font-size: 12px; padding-bottom: 12px; border-bottom: 1.5px dashed #c9c2b5; margin-bottom: 8px; }
+.lr-row { display: flex; justify-content: space-between; padding: 7px 0; }
+.lr-row b, .lr-total b { color: var(--red); font-variant-numeric: tabular-nums; }
+.lr-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1.5px dashed #c9c2b5; margin-top: 8px; padding-top: 12px; font-weight: 800; }
+.lr-total b.big { font-size: 28px; }
+.lr-foot { margin-top: 12px; text-align: center; font-size: 12px; color: var(--muted); }
+.drips { position: absolute; top: 0; right: 0; width: 46%; height: 100%; pointer-events: none; }
+.drips span { position: absolute; top: -30px; left: calc(var(--k) * 16% + 4%); font: 800 22px/1 var(--display); color: #ffd36b; opacity: 0; animation: drip 3.4s linear infinite; animation-delay: calc(var(--k) * -.57s); }
+@keyframes drip { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translateY(520px); opacity: 0; } }
+
+@media (max-width: 880px) {
+  .bill-fan { grid-template-columns: repeat(2, 1fr); }
+  .mini-bill2 { transform: translateY(40px) rotate(calc(var(--r) * 2)); }
+  .leak-cta { grid-template-columns: 1fr; padding: 36px 24px; }
+  .drips { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .mini-bill2, .card.reveal .num-badge { transition: none !important; }
+  .drips, .leak-btn { animation: none !important; }
+}
+body.still *, body.still *::before, body.still *::after { transition: none !important; animation: none !important; }

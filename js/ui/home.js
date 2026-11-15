@@ -1,5 +1,6 @@
 import { SAMPLES, sampleFields } from '../data/samples.js';
 import { formatDate } from '../engine/dates.js';
+import { urgency, normalizeBill } from '../engine/steps.js';
 import { esc } from './dom.js';
 
 const SRC = {
@@ -81,29 +82,52 @@ export function renderHome() {
 
   <section class="block">
     <div class="wrap">
-      <div class="section-head"><h2>Budgets ask for discipline. Billo asks for one tap.</h2>
+      <div class="section-head reveal"><h2>Budgets ask for discipline. Billo asks for one tap.</h2>
         <p>Budget apps fail ADHD brains because they need daily effort. Billo starts from the moment you freeze — a bill in your hand — and makes the next move obvious.</p></div>
       <div class="cards">
-        <div class="card"><div class="num-badge">1</div><h3>Snap it</h3><p>Photo, PDF or screenshot. AI reads who, how much and when — you can fix anything it gets wrong.</p></div>
-        <div class="card"><div class="num-badge">2</div><h3>Do one tiny step</h3><p>1–3 steps, each under 5 minutes, with the exact words to say when you need to call.</p></div>
-        <div class="card"><div class="num-badge">3</div><h3>Come back to “Today”</h3><p>One thing a day, a streak, and a running total of late fees you didn’t pay.</p></div>
+        <div class="card reveal" style="--rd:0"><div class="num-badge">1</div><h3>Snap it</h3><p>Photo, PDF or screenshot. AI reads who, how much and when — you can fix anything it gets wrong.</p></div>
+        <div class="card reveal" style="--rd:1"><div class="num-badge">2</div><h3>Do one tiny step</h3><p>1–3 steps, each under 5 minutes, with the exact words to say when you need to call.</p></div>
+        <div class="card reveal" style="--rd:2"><div class="num-badge">3</div><h3>Come back to “Today”</h3><p>One thing a day, a streak, and a running total of late fees you didn’t pay.</p></div>
       </div>
     </div>
   </section>
 
   <section class="block">
     <div class="wrap">
-      <div class="section-head"><h2>Try it on a real-looking bill</h2><p>Each sample goes through the same AI reading and step engine as your own bills.</p></div>
-      <div class="samples">${SAMPLES.map((s) => `
-        <a class="sample" href="#/scan/${esc(s.key)}" style="text-decoration:none;color:inherit"><span class="em">${s.emoji}</span><b>${esc(s.label)}</b><span>${esc(s.fields.payee)}</span></a>`).join('')}</div>
+      <div class="section-head reveal"><h2>Try it on a real-looking bill</h2><p>Pick one from the pile. Each goes through the same AI reading and step engine as your own bills.</p></div>
+      <div class="bill-fan reveal" id="bill-fan">${SAMPLES.map((s, i) => {
+        const f = sampleFields(s);
+        const u = urgency(normalizeBill(f));
+        const kind = { utility: 'Utility', fine: 'Ticket', subscription: 'Renewal', medical: 'Medical', phone: 'Phone' }[f.type] || 'Bill';
+        return `<a class="mini-bill2" href="#/scan/${esc(s.key)}" style="--i:${i};--r:${[-6, 4, -2, 5, -4][i]}deg">
+          <span class="mb-kind">${esc(kind)}</span>
+          <span class="mb-who">${esc(f.payee)}</span>
+          <span class="mb-lines"><i></i><i></i><i></i></span>
+          <span class="mb-amt">$${f.amount.toFixed(2)}</span>
+          <span class="urgency ${esc(u.level)}">${esc(u.label)}</span>
+          <span class="mb-go">Scan it →</span>
+        </a>`;
+      }).join('')}</div>
     </div>
   </section>
 
   <section class="block">
-    <div class="wrap narrow center">
-      <h2 style="font-size:clamp(28px,4vw,40px)">How much is your ADHD tax?</h2>
-      <p class="muted" style="font-size:18px">Six taps. Your personal money-leak map in 60 seconds.</p>
-      <a class="btn btn-primary btn-lg mt-16" href="#/quiz">Find my money leaks</a>
+    <div class="wrap">
+      <div class="leak-cta reveal">
+        <div class="drips" aria-hidden="true">${[0, 1, 2, 3, 4, 5].map((i) => `<span style="--k:${i}">$</span>`).join('')}</div>
+        <div class="leak-copy">
+          <span class="tag" style="background:rgba(255,255,255,.12);color:#ffd36b">60-second check</span>
+          <h2>How much is your ADHD&nbsp;tax?</h2>
+          <p>Six taps. See exactly where your money leaks — late fees, forgotten renewals, regret buys — in dollars a year.</p>
+          <a class="btn btn-lg leak-btn" href="#/quiz">Find my money leaks <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="leak-receipt" aria-hidden="true">
+          <div class="lr-head">YOUR ADHD TAX · 2026</div>
+          ${['Late fees', 'Forgotten subscriptions', 'Regret purchases', 'Overdraft fees', 'Lost & re-bought'].map((t) => `<div class="lr-row"><span>${t}</span><b class="scramble" data-len="3">$???</b></div>`).join('')}
+          <div class="lr-total"><span>TOTAL / YEAR</span><b class="scramble big" data-len="4">$????</b></div>
+          <div class="lr-foot">Answer 6 questions to reveal →</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -126,7 +150,10 @@ export function mountHome(root) {
   const drawer = root.querySelector('#drawer');
   const label = root.querySelector('#drawer-label');
   const timers = [];
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // `?still` renders the final frame of every animation (for screenshots and print).
+  const still = new URLSearchParams(window.location.search).has('still');
+  if (still) document.body.classList.add('still');
+  const reduce = still || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   (function tick() {
     if (!num.isConnected) { timers.forEach(clearTimeout); return; }
@@ -146,6 +173,29 @@ export function mountHome(root) {
     later(() => drawer.classList.add('s-scan'), 1900);
     later(() => { drawer.classList.add('s-done'); label.textContent = '5 unopened bills → 1 tiny step'; }, 3600);
   }
+  // Reveal blocks as they scroll into view.
+  const reveals = root.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach((el) => el.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    }), { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach((el) => io.observe(el));
+  }
+
+  // Mystery numbers on the leak receipt: they roll until you take the quiz.
+  const scrambles = [...root.querySelectorAll('.scramble')];
+  const roll = setInterval(() => {
+    if (!drawer.isConnected) { clearInterval(roll); return; }
+    if (reduce) return;
+    scrambles.forEach((el) => {
+      const n = Number(el.dataset.len);
+      const digits = Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join('');
+      el.textContent = n === 4 ? `$${digits[0] || 1},${digits.slice(1)}` : `$${digits}`;
+    });
+  }, 90);
+
   drawer.addEventListener('click', (e) => {
     if (e.target.closest('.env')) play();
     if (e.target.closest('#replay')) { drawer.className = 'drawer'; label.textContent = 'Your drawer · 5 unopened · tap one'; later(play, 900); }
